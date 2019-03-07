@@ -19,6 +19,7 @@
     }
     svg>text{
       fill:olive;
+      font-size:30px;
     }
 
     </style>
@@ -60,7 +61,7 @@
         var svg=d3.select("svg")
                   .attr("width",width+100)
                   .attr("height",height+50)
-                  .attr("viewBox","-50 -50 -1500 -1500");
+                  .attr("viewBox","-1500 -1500 -2000 -2000");
         svg.selectAll("circle")
            .data(data)
            .enter()
