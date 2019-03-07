@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta>
+    <title></title>
+    <script type="text/javascript" src="d3.js">
+    </script>
+    <style>
+    .axis line,
+    .axis path{
+      stroke:olive;
+      stroke-rendering:crispEdge;
+      stroke-width:2px;
+    }
+    .axis text{
+      font-family:sans-serif;
+      font-size:15px;
+      fill:teal;
+    }
+    svg>text{
+      fill:olive;
+    }
+
+    </style>
+  </head>
+  <body>
+    <svg></svg>
+    <script type="text/javascript">
+      var cause_csv=d3.csv("Salary.csv");
+      cause_csv.then(function(data){
+        var width=900;
+        var height=600;
+        var padding=30;
+        var xscale=d3.scaleLinear()
+                     .domain([d3.min(data,function(d){
+                       return parseInt(d.MidCareerSalary,10);
+                     }),d3.max(data,function(d){
+                       return parseInt(d.MidCareerSalary,10);
+                     })])
+                     .range([padding,width-padding]);
+        var yscale=d3.scaleLinear()
+                     .domain([d3.min(data,function(d){
+                       return parseInt(d.WorkersWithMajor,10);
+                     }),d3.max(data,function(d){
+                       return parseInt(d.WorkersWithMajor,10);
+                     })])
+                     .range([padding,height-padding]);
+        var cscale=d3.scaleLinear()
+                     .domain([d3.min(data,function(d){
+                       return parseInt(d.MidCareerSalary,10);
+                     }),d3.max(data,function(d){
+                       return parseInt(d.MidCareerSalary,10);
+                     })])
+                     .rangeRound([112,225]);
+        var rscale=d3.scaleSqrt()
+                     .domain([0,d3.max(data,function(d){
+                       return parseInt(d.MidCareerSalary,10);
+                     })])
+                     .range([0,20]);
+        var svg=d3.select("svg")
+                  .attr("width",width+100)
+                  .attr("height",height+50);
+        svg.selectAll("circle")
+           .data(data)
+           .enter()
+           .append("circle")
+           .attr("cx",function(d){
+             return xscale(parseInt(d.MidCareerSalary,10));
+           })
+           .attr("cy",function(d){return yscale(parseInt(d.WorkersWithMajor,10));})
+           .attr("r",function(d){
+             return rscale(parseInt(d.MidCareerSalary,10))
+           })
+           .attr("fill",function(d){
+             return "rgb(0,0,"+cscale(parseInt(d.MidCareerSalary,10))+")";})
+           .attr("stroke",function(d){
+             return "#2B823A";})
+           .attr("stroke-width","3");
+        var xAxis=d3.axisBottom()
+                    .scale(xscale);
+        var yAxis=d3.axisLeft()
+                    .scale(yscale);
+
+        svg.append("g")
+           .attr("class","axis")
+           .attr("transform","translate(0,"+(height-15)+")")
+           .call(xAxis)
+
+        svg.append("g")
+           .attr("class","axis")
+           .attr("transform","translate("+padding+",15)")
+           .call(yAxis);
+
+        svg.append("text")
+           .attr("x",875)
+           .attr("y",590)
+           .attr("class","x")
+           .text("Mid Career Salary");
+        svg.append("text")
+           .attr("x",15)
+           .attr("y",padding)
+           .attr("class","y")
+           .text("Workers With Major")
+           },
+        function(error){
+        console.log(error);
+      });
+
+    </script>
+  </body>
+</html>
